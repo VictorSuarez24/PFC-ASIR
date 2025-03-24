@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Control de Luz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+    button {
+      background-color: #4CAF50;
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 10px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    #estado {
+      font-size: 20px;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    .encendido {
+      color: green;
+    }
+    .apagado {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <h1>Control de Luz</h1>
+  <div id="estado" class="apagado">Estado: APAGADO</div>
+  
+  <script>
+    // URL para controlar la luz
+    function controlarLuz(accion) {
+      const url = `http://localhost:3000/api/services/light/turn_${accion}`;
+      
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ entity_id: 'light.wiz_rgbw_tunable_1bd5b6' }),
+      })
+      .then(response => {
+        if (!response.ok) {
+          return Promise.reject('Error en la solicitud: ' + response.statusText);
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log('Respuesta:', data);
+        obtenerEstado(); // Actualizar estado después de cambiar la luz
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    }
+
+    // URL para obtener el estado de la luz
+    const estadoUrl = `http://localhost:3000/api/states/light.wiz_rgbw_tunable_1bd5b6`;
+
+    // Función para obtener el estado de la luz
+    function obtenerEstado() {
+      fetch(estadoUrl, {
+        headers: {
+          "Authorization": "Bearer",
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        const estado = data.state; // "on" o "off"
+        const estadoElemento = document.getElementById("estado");
+        if (estado === "on") {
+          estadoElemento.textContent = "Estado: ENCENDIDO";
+          estadoElemento.classList.remove("apagado");
+          estadoElemento.classList.add("encendido");
+        } else {
+          estadoElemento.textContent = "Estado: APAGADO";
+          estadoElemento.classList.remove("encendido");
+          estadoElemento.classList.add("apagado");
+        }
+      })
+      .catch(error => {
+        console.error("Error al obtener el estado:", error);
+      });
+    }
+
+    // Llamar a la función para obtener el estado inicial
+    obtenerEstado();
+  </script>
+  <button onclick="controlarLuz('on'),obtenerEstado();">Encender Luz</button>
+  
+  <button onclick="controlarLuz('off'),obtenerEstado();">Apagar Luz</button>
+</body>
+</html>
