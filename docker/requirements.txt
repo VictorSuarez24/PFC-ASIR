@@ -1,2 +1,5 @@
 flask
 redis
+requests
+appdaemon
+flask_cors

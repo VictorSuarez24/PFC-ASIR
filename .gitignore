@@ -1,3 +1,4 @@
 PFC-ASIR.code-workspace
 .vscode
 test\node_modules
+.venv
