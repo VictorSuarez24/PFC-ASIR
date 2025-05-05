@@ -41,9 +41,9 @@ body{
   background: transparent;
   border-bottom-right-radius: 50px;
   box-shadow: 20px 30px 0 15px #444;
-  left: 16px;
-  top: -31px;
-  transform: rotate(-28deg);
+  left: 14px;
+  top: -35px;
+  transform: rotate(-30deg);
 }
 
 .bulb span:nth-child(2){
@@ -76,7 +76,7 @@ body{
   background: linear-gradient(#eee, #ccc, #eee);
   bottom: 50px;
   right: 50px;
-  border: 3px solid #000;
+  border: 2px solid #000;
   border-radius: 10px;
   display: flex;
   justify-content: center;
